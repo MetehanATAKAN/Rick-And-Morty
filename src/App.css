@@ -89,8 +89,9 @@
         text-align: left;
         background-color: rgb(248, 250, 252);
 
-        .error-message {
+        .error-message , .loading {
             text-align: center;
+            font-weight: bold;
         }
         .rick-and-morty-charecters-all-info {
             display: flex;

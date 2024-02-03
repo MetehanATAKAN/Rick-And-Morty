@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-
 type Rick = {
     id: string,
     name: string,
@@ -23,6 +22,9 @@ const MultipleSelects = () => {
     const [name, setName] = useState<string>('');
 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
+   
+    
+    const [loading, setLoading] = useState<boolean>(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,7 +41,6 @@ const MultipleSelects = () => {
     }
 
     const checkOnChange = (e: string) => {
-       
         const newOptions = options.map(data => {
             if (data.id === e) {
                 data.select = !data.select;
@@ -59,8 +60,6 @@ const MultipleSelects = () => {
 
     /**itemleri silmek */
     const deleteItem = (id: string) => {
-        console.log('çalıştı');
-
         const newOptions = options.map(data => {
             if (data.id === id) {
                 data.select = !data.select
@@ -73,13 +72,15 @@ const MultipleSelects = () => {
 
     /**inputa focuslanmak */
     const handleClick = (): void => {
+        
         if (inputRef.current) {
-          inputRef.current.focus();
+            inputRef.current.focus();
+            setShowDropdown(!showDropdown);
         }
-      };
+    };
 
-      /** önceden seçilmiş mi kontrolü yapıyorum */
-    const isIncludesSelectOptions = (id: string) => { 
+    /** önceden seçilmiş mi kontrolü yapıyorum */
+    const isIncludesSelectOptions = (id: string) => {
         for (var i = 0; i < selectOptions.length; i++) {
             if (selectOptions[i].id === id) {
                 return true;
@@ -102,11 +103,11 @@ const MultipleSelects = () => {
     };
 
     const rickAndMortyRequest = async () => {
+        setLoading(true)
         try {
             const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${name}`);
             const result = await response.json();
             if (response.status === 200) {
-                console.log(result);
 
                 setOptions(result.results?.map((item: any) => (
                     {
@@ -118,15 +119,17 @@ const MultipleSelects = () => {
                     }
                 )));
                 setError({ ...error, isError: false, message: '' });
+                setTimeout(() => { // bu kısımda 1 saniye gecikme ile verileri gösteriyorum
+                    setLoading(false);
+                }, 1000);
             }
             else {
                 setError({ ...error, isError: true, message: result.error });
+                setLoading(false);
             }
         } catch (error) {
             console.log(error);
-
         }
-
     }
 
     useEffect(() => {
@@ -141,24 +144,24 @@ const MultipleSelects = () => {
 
     useEffect(() => {
         /**Sayfa üzerinde herhangi bir yere tıklandığında çalışacak event listener */
-        const handleClickOutside = (event : any ) : void => {
-          /**Eğer tıklanan element, içinde bulunduğumuz bileşenin bir parçası değilse, showDropdown'u false yap */
-          if (!(event.target as HTMLElement).closest('.multiple-select-auto-complete')) {
-            setShowDropdown(false);
-          }
+        const handleClickOutside = (event: any): void => {
+            /**Eğer tıklanan element, içinde bulunduğumuz bileşenin bir parçası değilse, showDropdown'u false yap */
+            if (!(event.target as HTMLElement).closest('.multiple-select-auto-complete')) {
+                setShowDropdown(false);
+            }
         };
-    
+
         document.addEventListener('click', handleClickOutside);
-    
+
         /**Component unmount olduğunda event listener'ı temizle */
         return () => {
-          document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         };
-      }, []);
+    }, []);
 
     return (
         <div className='multiple-select-auto-complete'>
-            <div  className='multiple-select' onClick={handleClick}>
+            <div className='multiple-select' onClick={handleClick}>
 
                 <div className='select-options'>
                     {
@@ -166,7 +169,12 @@ const MultipleSelects = () => {
                             opt.select && (
                                 <div className='item'>
                                     <span className='character-name'> {opt.name}</span>
-                                    <span className='delete-icon' onClick={() => deleteItem(opt.id)} > x </span>
+                                    <button
+                                        className='delete-icon'
+                                        onClick={() => deleteItem(opt.id)}
+                                    >
+                                        x
+                                    </button>
                                 </div>
                             )
                         ))
@@ -180,7 +188,6 @@ const MultipleSelects = () => {
 
                 <input
                     onChange={(e) => searchOnChange(e.target.value)}
-                    onFocus={() => setShowDropdown(true)}
                     ref={inputRef}
                 />
                 <div onClick={() => setShowDropdown(!showDropdown)} className={`dropdown-icon dropdown-icon-${showDropdown}`}></div>
@@ -189,34 +196,36 @@ const MultipleSelects = () => {
                 showDropdown && (
                     <div className='rick-and-morty-charecters-info'>
                         {
-                            error.isError
-                                ? <div className='error-message'> {error.message} </div>
-                                : options?.map(data => (
-                                    <div className='rick-and-morty-charecters-all-info'>
-                                        <input
-                                            type='checkbox'
-                                            value={data.name}
-                                            checked={data.select}
-                                            id={data.id}
-                                            onChange={(e) => checkOnChange(e.target.id)}
-                                        />
-                                        <div className='image-info'>
-                                            <span>
-                                                <img
-                                                    className='rick-and-morty-charecters-image'
-                                                    src={data.image}
-                                                    alt={data.name}
-                                                    width={50}
-                                                    height={50}
-                                                />
-                                            </span>
-                                            <div className='info'>
-                                                <span> {boldSubstring(data.name, name)} </span>
-                                                <span> {`${data.episode} Episodes`} </span>
+                            loading
+                                ? <div className='loading'> Loading ... </div>
+                                : error.isError
+                                    ? <div className='error-message'> {error.message} </div>
+                                    : options?.map(data => (
+                                        <div className='rick-and-morty-charecters-all-info'>
+                                            <input
+                                                type='checkbox'
+                                                value={data.name}
+                                                checked={data.select}
+                                                id={data.id}
+                                                onChange={(e) => checkOnChange(e.target.id)}
+                                            />
+                                            <div className='image-info'>
+                                                <span>
+                                                    <img
+                                                        className='rick-and-morty-charecters-image'
+                                                        src={data.image}
+                                                        alt={data.name}
+                                                        width={50}
+                                                        height={50}
+                                                    />
+                                                </span>
+                                                <div className='info'>
+                                                    <span> {boldSubstring(data.name, name)} </span>
+                                                    <span> {`${data.episode} Episodes`} </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))
+                                    ))
                         }
                     </div>
                 )

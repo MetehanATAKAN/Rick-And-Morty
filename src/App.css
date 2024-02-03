@@ -1,7 +1,6 @@
 .rick-and-morty {
     display: flex;
     justify-content: center;
-    /* text-align: center; */
     .multiple-select {
         border: 2px solid rgb(161, 174, 193);
         max-width: 500px;
@@ -18,7 +17,6 @@
             outline: none;
             box-sizing: border-box;
             width: 100%;
-            /* max-width: 500px; */
         }
 
         .select-options {
@@ -44,37 +42,6 @@
                     margin-left: 5px;
                     cursor: pointer;
                 }
-
-                .character-name {
-                    /* width: max-content; */
-                }
-            }
-        }
-
-        /* &::after {
-                content: "▼";
-                font-size: 1rem;
-                position: absolute;
-            } */
-        .dropdown-icon {
-            display: flex;
-            align-items: center;
-            &::before {
-                font-size: 1rem;
-                position: relative;
-                cursor: pointer;
-            }
-        }
-
-        .dropdown-icon-true {
-            &::before {
-                content: "⏷";
-            }
-        }
-
-        .dropdown-icon-false {
-            &::before {
-                content: "⏶";
             }
         }
     }
@@ -115,6 +82,28 @@
                 display: grid;
                 margin-left: 10px;
             }
+        }
+    }
+
+    .dropdown-icon {
+        display: flex;
+        align-items: center;
+        &::before {
+            font-size: 1rem;
+            position: relative;
+            cursor: pointer;
+        }
+    }
+
+    .dropdown-icon-true {
+        &::before {
+            content: "⏷";
+        }
+    }
+
+    .dropdown-icon-false {
+        &::before {
+            content: "⏶";
         }
     }
 }

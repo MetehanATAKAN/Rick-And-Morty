@@ -35,12 +35,12 @@ const MultipleSelects = () => {
 
     const [hiddenItemCount, setHiddenItemCount] = useState<number>(0);
 
-    const searchOnChange = (e: string) => {
+    const searchOnChange = (e: string): void => {
         setShowDropdown(true);
         setName(e);
     }
 
-    const checkOnChange = (e: string) => {
+    const checkOnChange = (e: string): void => {
         const newOptions = options.map(data => {
             if (data.id === e) {
                 data.select = !data.select;
@@ -74,6 +74,7 @@ const MultipleSelects = () => {
     const handleClick = (): void => {
         if (inputRef.current) {
             inputRef.current.focus();
+            setShowDropdown(true);
         }
     };
 
@@ -143,10 +144,12 @@ const MultipleSelects = () => {
     useEffect(() => {
         /**Sayfa üzerinde herhangi bir yere tıklandığında çalışacak event listener */
         const handleClickOutside = (event: any): void => {
-
             /**Eğer tıklanan element, içinde bulunduğumuz bileşenin bir parçası değilse, showDropdown'u false yap */
             if (!(event.target).closest('.multiple-select-auto-complete')) {
                 setShowDropdown(false);
+                if (event.target.className === 'delete-icon') {
+                    setShowDropdown(true);
+                }
             }
         };
 
@@ -158,10 +161,11 @@ const MultipleSelects = () => {
         };
     }, []);
 
+
     return (
         <div className='multiple-select-auto-complete'>
-            <div className='multiple-select' onClick={handleClick}>
-                <div className='select-options'>
+            <div className='multiple-select'>
+                <div className='select-options' onClick={handleClick} >
                     {
                         selectOptions?.filter(data => data.select).slice(0, 2).map(opt => (
                             opt.select && (
@@ -185,9 +189,10 @@ const MultipleSelects = () => {
                 </div>
 
                 <input
+                    className='search-input'
                     onChange={(e) => searchOnChange(e.target.value)}
+                    onClick={handleClick}
                     ref={inputRef}
-                    onFocus={() => setShowDropdown(!showDropdown)}
                 />
                 <div onClick={() => setShowDropdown(!showDropdown)} className={`dropdown-icon dropdown-icon-${showDropdown}`}></div>
             </div>

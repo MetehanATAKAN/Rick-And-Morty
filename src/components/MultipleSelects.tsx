@@ -16,9 +16,10 @@ type ErrorInfo = {
 const MultipleSelects = () => {
 
     const [options, setOptions] = useState<Rick[]>([]);
-
+    
     const [selectOptions, setSelectOptions] = useState<Rick[]>([]);
-
+  
+    
     const [name, setName] = useState<string>('');
 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -41,6 +42,7 @@ const MultipleSelects = () => {
     }
 
     const checkOnChange = (e: string): void => {
+
         const newOptions = options.map(data => {
             if (data.id === e) {
                 data.select = !data.select;
@@ -48,12 +50,29 @@ const MultipleSelects = () => {
             return data
         })
 
-        const newSelectOptions = options.filter(data => data.select === true);
-        const filteredNewSelectOptions = newSelectOptions.filter(newOption => {
-            return !selectOptions.some(existingOption => existingOption.id === newOption.id);
-        });
+        /**seçilmiş olanları alıyorum */
+        const newSelectOptions = newOptions.filter(data => data.select === true);
 
-        setSelectOptions([...selectOptions, ...filteredNewSelectOptions]);
+        /**seçilmiş olan ürünler ile dropdown da seçilmiş olan selectleri true olanları birleştiriyorum*/
+        const allSelect = [...selectOptions,...newSelectOptions];
+        
+        /**seçilmiş olan tüm selectleri tüm opsiyonlar ile karşılaştırıp doğru olan verileri bulup değişkene atıyorum */
+        const newAllSelect = allSelect.map(data => {
+            newOptions.map(item => {
+                if(data.id === item.id) {
+                    data.select = item.select;
+                }
+                return item
+            })
+            return data
+        })
+        
+        const newSelectOption =newAllSelect.filter(
+            (eleman, index, self) =>
+              index ===
+              self.findIndex((t) => t.id === eleman.id)
+          )
+        setSelectOptions([...newSelectOption]);
         setOptions(newOptions);
     }
 
@@ -78,10 +97,10 @@ const MultipleSelects = () => {
         }
     };
 
-    /** önceden seçilmiş mi kontrolü yapıyorum */
+    /** önceden seçilmiş mi kontrolü yapıyorum seçili ise selectini true yapıyorum */
     const isIncludesSelectOptions = (id: string) => {
         for (var i = 0; i < selectOptions.length; i++) {
-            if (selectOptions[i].id === id) {
+            if (selectOptions[i].id === id && selectOptions[i].select) {
                 return true;
             }
         }
@@ -143,7 +162,7 @@ const MultipleSelects = () => {
 
     useEffect(() => {
         /**Sayfa üzerinde herhangi bir yere tıklandığında çalışacak event listener */
-        const handleClickOutside = (event: any): void => {
+        const handleClickOutside = (event: any): void => {   
             /**Eğer tıklanan element, içinde bulunduğumuz bileşenin bir parçası değilse, showDropdown'u false yap */
             if (!(event.target).closest('.multiple-select-auto-complete')) {
                 setShowDropdown(false);
@@ -152,7 +171,6 @@ const MultipleSelects = () => {
                 }
             }
         };
-
         document.addEventListener('click', handleClickOutside);
 
         /**Component unmount olduğunda event listener'ı temizle */

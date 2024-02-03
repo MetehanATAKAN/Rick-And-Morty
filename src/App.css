@@ -1,86 +1,95 @@
 .rick-and-morty {
-    display: flex;
-    justify-content: center;
-    .multiple-select {
-        border: 2px solid rgb(161, 174, 193);
-        max-width: 500px;
-        min-width: 500px;
-        border-radius: 10px;
-        margin: 30px auto 5px auto;
-        display: flex;
-        padding: 4px;
-        height: 40px;
-        input {
-            margin: 0 5px;
-            padding: 0;
-            border: none;
-            outline: none;
-            box-sizing: border-box;
-            width: 100%;
-        }
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 
-        .select-options {
+    .multiple-select-auto-complete {
+        grid-column: 2;
+
+        .multiple-select {
+            border: 2px solid rgb(161, 174, 193);
+            max-width: 500px;
+            min-width: 500px;
+            border-radius: 10px;
+            margin: 30px auto 5px auto;
             display: flex;
-
-            .item {
-                display: flex;
-                width: max-content;
-                border: 1px solid transparent;
-                border-radius: 10px;
-                background-color: rgb(226, 232, 240);
-                padding: 3px;
-                color: rgb(64, 77, 97);
-                font-weight: 500;
-                margin: auto 5px auto auto;
-                .delete-icon {
-                    border: 1px solid transparent;
-                    border-radius: 5px;
-                    background-color: rgb(148, 163, 184);
-                    color: rgb(255, 255, 255);
-                    padding: 0 7px;
-                    font-size: small;
-                    margin-left: 5px;
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-
-    .rick-and-morty-charecters-info {
-        border: 2px solid rgb(161, 174, 193);
-        width: 500px;
-        margin: auto;
-        border-radius: 15px;
-        height: 300px;
-        overflow: auto;
-        text-align: left;
-        background-color: rgb(248, 250, 252);
-
-        .error-message , .loading {
-            text-align: center;
-            font-weight: bold;
-        }
-        .rick-and-morty-charecters-all-info {
-            display: flex;
-            border-bottom: 2px solid rgb(161, 174, 193);
-            padding: 10px 0;
+            padding: 4px;
+            height: 40px;
 
             input {
-                margin-left: 10px;
+                margin: 0 5px;
+                padding: 0;
+                border: none;
+                outline: none;
+                box-sizing: border-box;
+                width: 100%;
             }
 
-            .image-info {
+            .select-options {
                 display: flex;
-                margin-left: 10px;
 
-                img {
+                .item {
+                    display: flex;
+                    width: max-content;
+                    border: 1px solid transparent;
                     border-radius: 10px;
+                    background-color: rgb(226, 232, 240);
+                    padding: 3px;
+                    color: rgb(64, 77, 97);
+                    font-weight: 500;
+                    margin: auto 5px auto auto;
+
+                    .delete-icon {
+                        border: 1px solid transparent;
+                        border-radius: 5px;
+                        background-color: rgb(148, 163, 184);
+                        color: rgb(255, 255, 255);
+                        padding: 0 7px;
+                        font-size: small;
+                        margin-left: 5px;
+                        cursor: pointer;
+                    }
                 }
             }
+        }
 
-            .info {
-                display: grid;
-                margin-left: 10px;
+        .rick-and-morty-charecters-info {
+            border: 2px solid rgb(161, 174, 193);
+            width: 500px;
+            margin: auto;
+            border-radius: 15px;
+            height: 300px;
+            overflow: auto;
+            text-align: left;
+            background-color: rgb(248, 250, 252);
+
+            .error-message,
+            .loading {
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .rick-and-morty-charecters-all-info {
+                display: flex;
+                border-bottom: 2px solid rgb(161, 174, 193);
+                padding: 10px 0;
+
+                input {
+                    margin-left: 10px;
+                }
+
+                .image-info {
+                    display: flex;
+                    margin-left: 10px;
+
+                    img {
+                        border-radius: 10px;
+                    }
+                }
+
+                .info {
+                    display: grid;
+                    margin-left: 10px;
+                }
             }
         }
     }
@@ -88,6 +97,7 @@
     .dropdown-icon {
         display: flex;
         align-items: center;
+
         &::before {
             font-size: 1rem;
             position: relative;

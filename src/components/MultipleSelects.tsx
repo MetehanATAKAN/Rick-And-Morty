@@ -55,7 +55,6 @@ const MultipleSelects = () => {
 
         setSelectOptions([...selectOptions, ...filteredNewSelectOptions]);
         setOptions(newOptions);
-        handleClick();
     }
 
     /**itemleri silmek */

@@ -36,6 +36,11 @@ const MultipleSelects = () => {
 
     const [hiddenItemCount, setHiddenItemCount] = useState<number>(0);
 
+    const onKeyDown = (event : any,id : string) :void => {
+        console.log(event.key);
+        
+    }
+
     const searchOnChange = (e: string): void => {
         setShowDropdown(true);
         setName(e);
@@ -187,7 +192,7 @@ const MultipleSelects = () => {
                     {
                         selectOptions?.filter(data => data.select).slice(0, 2).map(opt => (
                             opt.select && (
-                                <div className='item'>
+                                <div key={opt.id} className='item'>
                                     <span className='character-name'> {opt.name}</span>
                                     <button
                                         className='delete-icon'
@@ -223,13 +228,14 @@ const MultipleSelects = () => {
                                 : error.isError
                                     ? <div className='error-message'> {error.message} </div>
                                     : options?.map(data => (
-                                        <div className='rick-and-morty-charecters-all-info'>
+                                        <div key={data.id} className='rick-and-morty-charecters-all-info' >
                                             <input
                                                 type='checkbox'
                                                 value={data.name}
                                                 checked={data.select}
                                                 id={data.id}
                                                 onChange={(e) => checkOnChange(e.target.id)}
+                                                onKeyDown={(e)=>onKeyDown(e,data.id)}
                                             />
                                             <div className='image-info'>
                                                 <span>
